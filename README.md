@@ -18,7 +18,7 @@ This repository serves as an idea for booting into Sequoia, Sonoma, and Ventura 
 ## What Works
 - [x] Full UEFI Booting & Native Storage Management
 - [x] Intel HD 620 Graphics Acceleration (Spoofed)
-- [x] Intel Wi-Fi & Bluetooth (Via specialized root-patch configuration)
+- [x] Intel Wi-Fi & Bluetooth (By Specialized root-patch configurations)
 - [x] iCloud Syncing, iMessage, and FaceTime Authentication
 
 ---
@@ -36,14 +36,14 @@ Because macOS Sequoia dropped native support for older legacy wireless chipsets,
 
 ### 2. Fix Speed Drops & Connection Jitters
 To stabilize the translated network drivers and stop the card from choking down to kilobytes during heavy indexing:
-- Open your configuration and ensure the **`-novht`** flag is appended to your `boot-args` string under `NVRAM -> Add -> 7C436110-...`. This disables High-Throughput profiles, locking the card into a highly stable Wireless-N state. I have already done this for you guys, but a double-check is always recommended!
-- Unfortunately, Native WiFiFor heavy transfers (like initial iCloud indexing), temporarily disable Bluetooth to prevent antenna packet collisions, and isolate your router's 5GHz band if possible.
+- Open your configuration and ensure the **`-novht`** flag is appended to your `boot-args` string under `NVRAM -> Add -> 7C436110-...`. This disables High-Throughput profiles, locking the card into a highly stable Wireless-N state. I have already done this for you guys, but a double-check is always recommended.
+- Unfortunately, Native WiFi For heavy transfers (like initial iCloud indexing), temporarily disable Bluetooth to prevent antenna packet collisions, and isolate your router's 5GHz band if possible. Use Ethernet, since that port has the fastest speeds you could get on this machine!
 
 ---
 
 ## Crucial Requirement Before Booting (SMBIOS Data)
 
-To ensure privacy and safety, the `config.plist` in this repository has been fully sanitized. **It will not boot out of the box.** 
+Because of privacy and safety, the `config.plist` in this repository has been fully clean of any serial or any trace of previous use. **It will not boot out of the box.** 
 
 Before copying this EFI to your drive:
 1. Open `EFI/OC/config.plist` using ProperTree.
@@ -62,4 +62,4 @@ This repository does **NOT** contain proprietary Apple software binaries or inst
 A massive thanks to the brilliant developers across the Hackintosh landscape whose open-source tools made this possible:
 - [Acidanthera](https://github.com/acidanthera) - For the OpenCore bootloader and foundational system kexts (`Lilu`, `VirtualSMC`, `WhateverGreen`).
 - [OpenIntelWireless](https://github.com/OpenIntelWireless) - For the development of `AirportItlwm`, keeping legacy wireless hardware alive.
-- **OCLP-Mod Contributors** - For creating the critical patch frameworks required to bypass modern macOS networking lockdowns.
+- **OCLP-Mod Contributors**(https://github.com/laobamac/OCLP-Mod/releases). - For creating the critical patch frameworks required to bypass modern macOS networking lockdowns.
