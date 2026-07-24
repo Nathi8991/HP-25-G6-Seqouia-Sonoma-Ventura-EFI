@@ -8,7 +8,7 @@ This repository serves as an idea for booting into Sequoia, Sonoma, and Ventura 
 ## System Specifications
 - **Laptop Model:** HP Laptop 250 G6
 - **CPU:** Intel Core i5-7200U (Kaby Lake)
-- **RAM:** 12GB DDR4
+- **RAM:** 12GB DDR4 (Upgraded from 8, upto 16 from what I know)
 - **Graphics:** Intel HD Graphics 620
 - **Wi-Fi/Bluetooth:** Intel Wireless-AC 7260
 - **Bootloader:** OpenCore
@@ -60,7 +60,7 @@ This repository does **NOT** contain proprietary Apple software binaries or inst
 
 ## Credits & Acknowledgments
 A massive thanks to the brilliant developers across the Hackintosh landscape whose open-source tools made this possible:
-- [Acidanthera](https://github.com/acidanthera) - For the OpenCore bootloader and foundational system kexts (`Lilu`, `VirtualSMC`, `WhateverGreen`).
+- [Acidanthera](https://github.com/acidanthera) - For the OpenCore bootloader and foundational system kexts (`Lilu`, `VirtualSMC`, `WhateverGreen` `macOS installer`).
 - [OpenIntelWireless](https://github.com/OpenIntelWireless/itlwm) - For the development of `AirportItlwm`, keeping legacy wireless hardware alive.
-- Again, [OpenIntelWireless](https://github.com/OpenIntelWireless/Heliport) - For the Heliport Option, enabling WiFi (Non-Native)
+- [OpenIntelWireless](https://github.com/OpenIntelWireless/Heliport), Again - For the Heliport Option, enabling WiFi (Non-Native)
 - [**OCLP-Mod Contributors**](https://github.com/laobamac/OCLP-Mod/releases). - For creating the critical patch frameworks required to bypass modern macOS networking lockdowns.
