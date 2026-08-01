@@ -1,4 +1,4 @@
-# HP Laptop 250 G6 — OpenCore EFI (Ventura · Sonoma · Sequoia)
+# HP Laptop 250 G6 — OpenCore EFI (Ventura · Sonoma · Sequoia · Tahoe)
 
 > **Quick note:** This EFI is built and tested on the **HP Laptop 250 G6**. It might be useful as a starting point for other Kaby Lake laptops, but I can't tell you if it'll work on different hardware or not.
 
