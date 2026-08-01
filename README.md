@@ -4,6 +4,8 @@
 
 >**SYSTEM WILL REFUSE TO BOOT**: Please read the whole guide to actually get a functional EFI that will work properly on this hardware
 
+>**TAHOE IS IN A FUNCTIONAL, BUT NOT RELEASABLE STATE, THANK YOU FOR YOUR PATIENCE WHILE I FIX ITS KNOWN ISSUES!**
+
 ---
 
 So this is my OpenCore EFI for running macOS Ventura, Sonoma, Sequoia and Tahoe on the HP 250 G6. Getting it to a daily-driver state took a while, especially the Wi-Fi situation, which is its own thing entirely. I Hope this saves someone a few hours of struggling.
