@@ -1,66 +1,102 @@
-# HP-25-G6-Seqouia-Sonoma-Ventura-EFI
-EFI folders for the HP Laptop 250 G6, as well as other Kaby Lake (7th Gen Intel CPU's) EFI
-<hr> 
-<b>THIS REPOSITORY IS DIRECTED TOWARDS THE HP LAPTOP 250 G6, I HAVE NO CERTAIN IDEA WHETHER THIS WILL WORK WITH OTHER LAPTOP MANUFACTURERS</b>  
+# HP Laptop 250 G6 — OpenCore EFI (Ventura · Sonoma · Sequoia)
 
-This repository serves as an idea for booting into Sequoia, Sonoma, and Ventura on this specific hardware profile, as well as a reference framework for anyone trying to stabilize an **Intel Wireless-AC 7260** card on downgraded legacy wireless drivers.
+> **Quick note:** This EFI is built and tested on the **HP Laptop 250 G6**. It might be useful as a starting point for other Kaby Lake laptops, but I can't tell you if it'll work on different hardware or not.
+
+>**SYSTEM WILL REFUSE TO BOOT**: Please read the whole guide to actually get a functional EFI that will work properly on this hardware
+
+---
+
+So this is my OpenCore EFI for running macOS Ventura, Sonoma, Sequoia and Tahoe on the HP 250 G6. Getting it to a daily-driver state took a while, especially the Wi-Fi situation, which is its own thing entirely. I Hope this saves someone a few hours of struggling.
+
+If you're also trying to get the **Intel Wireless-AC 7260** working on a modern macOS version, the setup notes below should be pretty useful even if your hardware isn't identical.
+
+---
 
 ## System Specifications
-- **Laptop Model:** HP Laptop 250 G6
-- **CPU:** Intel Core i5-7200U (Kaby Lake)
-- **RAM:** 12GB DDR4 (Upgraded from 8, upto 16 from what I know)
-- **Graphics:** Intel HD Graphics 620
-- **Wi-Fi/Bluetooth:** Intel Wireless-AC 7260
-- **Bootloader:** OpenCore
+
+| Component | Details |
+|---|---|
+| **Model** | HP Laptop 250 G6 |
+| **CPU** | Intel Core i5-7200U (Kaby Lake, 7th Gen) |
+| **RAM** | 12GB DDR4 (came with 8GB, supports up to 16GB) |
+| **Graphics** | Intel HD Graphics 620 |
+| **Wi-Fi / Bluetooth** | Intel Wireless-AC 7260 |
+| **Bootloader** | OpenCore |
 
 ---
 
 ## What Works
-- [x] Full UEFI Booting & Native Storage Management
-- [x] Intel HD 620 Graphics Acceleration (Spoofed)
-- [x] Intel Wi-Fi & Bluetooth (By Specialized root-patch configurations)
-- [x] iCloud Syncing, iMessage, and FaceTime Authentication
+
+- [x] Full UEFI boot, NVMe/SATA storage works fine
+- [x] Intel HD 620 graphics acceleration (spoofed device-id)
+- [x] Intel Wi-Fi and Bluetooth (needs post-install patching, covered below)
+- [x] iCloud, iMessage, FaceTime — all working once SMBIOS is set up properly
+- [x] macOS Versions — all above Ventura!
+- [x] Full macOS Tahoe Support oncoming!
 
 ---
 
-## Post-Install Setup for Intel Wi-Fi & iServices
+## Before You Boot — Set Up Your SMBIOS First
 
-To reduce your chances of having sysyem instability, connection drops, and service failures, you **must** implement the following post-install configuration:
+Please do this before anything else. The `config.plist` in this repo has been wiped of all serial numbers and platform identifiers — **it will not boot out of the box**, and that's intentional. I'm not going to share my serials, and you shouldn't be using someone else's anyway to begin with XD.
 
-### 1. Re-apply Post-Install Root Patches
-Because macOS Sequoia dropped native support for older legacy wireless chipsets, you must use the specialized community modification tool:
-1. Boot into the desktop using this EFI.
-2. Open **OCLP-Mod** (the custom Intel-supported fork of OpenCore Legacy Patcher).
-3. Select **Post-Install Root Patch** and let the system inject the necessary kernel extensions into the system volume.
-4. Reboot your machine.
+Please follow the following steps to properly to successfully boot into the recovery system:
 
-### 2. Fix Speed Drops & Connection Jitters
-To stabilize the translated network drivers and stop the card from choking down to kilobytes during heavy indexing:
-- Open your configuration and ensure the **`-novht`** flag is appended to your `boot-args` string under `NVRAM -> Add -> 7C436110-...`. This disables High-Throughput profiles, locking the card into a highly stable Wireless-N state. I have already done this for you guys, but a double-check is always recommended.
-- Unfortunately, Native WiFi For heavy transfers (like initial iCloud indexing), temporarily disable Bluetooth to prevent antenna packet collisions, and isolate your router's 5GHz band if possible. Use Ethernet, since that port has the fastest speeds you could get on this machine!
-
----
-
-## Crucial Requirement Before Booting (SMBIOS Data)
-
-Because of privacy and safety, the `config.plist` in this repository has been fully clean of any serial or any trace of previous use. **It will not boot out of the box.** 
-
-Before copying this EFI to your drive:
-1. Open `EFI/OC/config.plist` using ProperTree.
-2. Navigate to `PlatformInfo -> Generic`.
-3. Use **GenSMBIOS** to generate unique system values for a **MacBookPro14,1** profile.
-4. Replace the placeholders (`REPLACE_WITH_YOUR_...`) with your unique **MLB**, **SystemSerialNumber**, and **SystemUUID** values. 
-5. Set the `ROM` type to `Data` and populate it with your laptop's true physical MAC address (or 12 zeros to reset it).
+1. Open `EFI/OC/config.plist` in **ProperTree**.
+2. Go to `PlatformInfo → Generic`.
+3. Use **GenSMBIOS** to generate values for a **MacBookPro15,1** profile (For anything before sequoia), and **MacBookPro16,1** for Tahoe.
+4. Replace the `REPLACE_WITH_YOUR_...` placeholders with your generated **MLB**, **SystemSerialNumber**, and **SystemUUID**.
+5. Set the `ROM` field to `Data` type, or that of a similar looking number.
 6. Save the file.
+   
+iServices WILL FAIL if not done correctly
 
 ---
 
-## Legal Notice
-This repository does **NOT** contain proprietary Apple software binaries or installer images. Users must fetch an official copy of macOS Sequoia directly via Apple's software distribution network.
+## Post-Install: Wi-Fi and Bluetooth
 
-## Credits & Acknowledgments
-A massive thanks to the brilliant developers across the Hackintosh landscape whose open-source tools made this possible:
-- [Acidanthera](https://github.com/acidanthera) - For the OpenCore bootloader and foundational system kexts (`Lilu`, `VirtualSMC`, `WhateverGreen` `macOS installer`).
-- [OpenIntelWireless](https://github.com/OpenIntelWireless/itlwm) - For the development of `AirportItlwm`, keeping legacy wireless hardware alive.
-- [OpenIntelWireless](https://github.com/OpenIntelWireless/Heliport), Again - For the Heliport Option, enabling WiFi (Non-Native)
-- [**OCLP-Mod Contributors**](https://github.com/laobamac/OCLP-Mod/releases). - For creating the critical patch frameworks required to bypass modern macOS networking lockdowns.
+Sequoia dropped native support for older Intel wireless chips, so the wifi card will literally block wifi from ever being turned on until you patch it.
+
+**The Following is the the steps in a simpler version based on the guide from 5T33Z0. His guide is more comprehensive, and I will also post another README.md file specifically for this wifi issue**
+
+**Root Patch with OCLP-Mod**
+
+1. Boot into the desktop with this EFI (Wi-Fi won't work yet, use Ethernet).
+2. Download and open a custom **OCLP-Mod** by laobamac — it's a community fork of OpenCore Legacy Patcher maintained by him to fix Intel Wifi Card issues for Seqouia and Tahoe
+3. Hit **Post-Install Root Patch** and let it run. It injects the legacy kexts back into the system volume.
+4. Reboot.
+
+Wi-Fi and Bluetooth should show up normally in System Settings.
+
+**Speed Issues**
+
+If your connection keeps dropping or throttling down to almost nothing during heavy activity, this is a known limitation with these legacy drivers for Sequoia and above. The AC 7260 doesn't work natively. An alternative like **Heliport** may give you better results, but completely removes native functionality, so iServices would struggle without it (Like Find My, weather, and that requiring native functionality. Other stuff like iMessage and Facetime will work regardless).
+
+A few other things worth knowing:
+
+- **Disable Bluetooth during initial iCloud sync.** The AC 7260 shares its antenna between Wi-Fi and BT, and when both are hammering it at once the card starts to slow down. Turn BT off and let iCloud finish its first sync, then turn it back on.
+- **Stick to 2.4GHz if you can.**
+- **Use Ethernet if it's an option.** The onboard NIC works natively and is genuinely the fastest you'll get on this machine.
+---
+
+## Legal
+
+No Apple software or macOS images are included here. Grab a legitimate copy of macOS directly from Apple, or from dortania's OpenCore Tutorial Page. This repo is purely a personal project shared for reference.
+
+---
+
+## From Here Onwards
+
+I am currently looking into the EFI for Big sur, monterey, and even possibly catalina if it is what you desire! Stay tuned y'all!
+
+---
+
+## Credits
+
+Big thanks to the people who actually built the tools that make this possible:
+
+- [**Acidanthera**](https://github.com/acidanthera) — OpenCore, Lilu, VirtualSMC, WhateverGreen. The foundation
+- [**OCLP4HACKINTOSH (Seqouia and Tahoe Wifi Fix)**](https://github.com/5T33Z0/OCLP4Hackintosh/blob/main/Enable_Features/AirportItllwm_Sequoia.md) — Dedicated guide for Airportitlwm.kext fix on Seqouia and above
+- [**OpenIntelWireless**](https://github.com/OpenIntelWireless/itlwm) — `AirportItlwm`, keeping Intel Wi-Fi cards alive.
+- [**OpenIntelWireless**](https://github.com/OpenIntelWireless/HeliPort) — HeliPort, when you need a Wi-Fi menu bar that actually works (NOT NATIVE).
+- [**OCLP-Mod Contributors**](https://github.com/laobamac/OCLP-Mod) — For keeping the patch framework going for Intel Wifi Card hardware.
